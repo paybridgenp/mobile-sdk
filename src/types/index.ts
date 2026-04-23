@@ -8,6 +8,23 @@ export type PayBridgeMobileConfig = {
 };
 
 /**
+ * Parameters for POST /v1/mobile/session — called from your backend.
+ * customer is required for mobile sessions (no hosted checkout page to collect it).
+ */
+export type CreateMobileSessionParams = {
+  amount: number;       // in paisa (1 NPR = 100 paisa)
+  provider: Provider;   // "esewa" | "khalti"
+  currency?: "NPR";
+  description?: string;
+  metadata?: Record<string, unknown>;
+  customer: {
+    name: string;
+    email: string;
+    phone: string;
+  };
+};
+
+/**
  * Returned by your backend after calling POST /v1/mobile/session.
  * Pass this directly to PayBridgeSheet or usePayBridge.
  * Never store this on the device — it expires in 15 minutes.

@@ -1,7 +1,7 @@
 {
   "name": "@paybridge-np/mobile-sdk",
-  "version": "0.1.0",
-  "description": "Official React Native SDK for PayBridge NP — accept eSewa and Khalti payments natively in your mobile app",
+  "version": "0.1.1",
+  "description": "Official React Native SDK for PayBridgeNP — accept eSewa and Khalti payments natively in your mobile app",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "scripts": {
