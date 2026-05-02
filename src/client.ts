@@ -75,8 +75,15 @@ export class MobileHttpClient {
         raw = (await res.json()) as Record<string, unknown>;
       } catch {}
 
-      const message =
-        typeof raw?.error === "string" ? raw.error : `HTTP ${res.status}`;
+      // v3+ shape: { error: { message, type, code, request_id, ... } }
+      // pre-v3:    { error: "string", code: "..." }
+      let message = `HTTP ${res.status}`;
+      const errObj = raw && typeof raw.error === "object" ? raw.error as Record<string, unknown> : null;
+      if (errObj && typeof errObj.message === "string") {
+        message = errObj.message;
+      } else if (typeof raw?.error === "string") {
+        message = raw.error;
+      }
       throw new Error(`[PayBridge] ${message}`);
     }
   }
