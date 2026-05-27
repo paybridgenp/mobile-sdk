@@ -16,13 +16,13 @@ const PROVIDERS: Record<
   khalti: {
     name: "Khalti",
     subtitle: "Digital wallet & bank transfer",
-    color: "#5C2D91",
+    color: "#5E338D",
     logoUri: "https://cdn.brandfetch.io/domain/khalti.com?c=1idpK8WCPDflcXYNlms",
   },
   esewa: {
     name: "eSewa",
     subtitle: "Digital wallet & online banking",
-    color: "#60BB46",
+    color: "#3cc850",
     logoUri: "https://cdn.brandfetch.io/domain/esewa.com.np?c=1idpK8WCPDflcXYNlms",
   },
 };

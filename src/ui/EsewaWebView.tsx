@@ -72,7 +72,7 @@ function buildFormHtml(params: NativeParams): string {
   <style>
     body { font-family: -apple-system, sans-serif; display: flex; align-items: center;
            justify-content: center; min-height: 100vh; margin: 0; background: #F5F5F5; }
-    p { color: #60BB46; font-size: 16px; font-weight: 600; }
+    p { color: #3cc850; font-size: 16px; font-weight: 600; }
   </style>
 </head>
 <body onload="document.forms[0].submit()">
@@ -161,7 +161,7 @@ export function EsewaWebView({ visible, native_params, onSuccess, onFailure, onC
         {/* Loading overlay */}
         {loading && (
           <View style={styles.loadingOverlay}>
-            <ActivityIndicator size="large" color="#60BB46" />
+            <ActivityIndicator size="large" color="#3cc850" />
             <Text style={styles.loadingText}>Loading eSewa...</Text>
           </View>
         )}
@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
     width: 12,
     height: 12,
     borderRadius: 6,
-    backgroundColor: "#60BB46",
+    backgroundColor: "#3cc850",
   },
   title: {
     fontSize: 17,
@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     fontSize: 14,
-    color: "#60BB46",
+    color: "#3cc850",
     fontWeight: "500",
   },
   webview: {

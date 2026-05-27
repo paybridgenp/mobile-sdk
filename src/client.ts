@@ -31,7 +31,7 @@ export class MobileHttpClient {
     const url = `${this.baseUrl}${path}`;
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
-      "User-Agent": "PayBridgeNP-MobileSDK/0.1.0",
+      "User-Agent": "PayBridgeNP-MobileSDK/0.1.1",
     };
 
     let attempt = 0;
@@ -55,7 +55,7 @@ export class MobileHttpClient {
       } catch (err) {
         clearTimeout(timer);
         if (attempt > DEFAULT_MAX_RETRIES) {
-          throw new Error(`[PayBridge] Connection error: ${(err as Error).message}`);
+          throw new Error(`[PayBridgeNP] Connection error: ${(err as Error).message}`);
         }
         await sleep(backoff(attempt));
         continue;
@@ -84,7 +84,7 @@ export class MobileHttpClient {
       } else if (typeof raw?.error === "string") {
         message = raw.error;
       }
-      throw new Error(`[PayBridge] ${message}`);
+      throw new Error(`[PayBridgeNP] ${message}`);
     }
   }
 

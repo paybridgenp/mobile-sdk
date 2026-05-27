@@ -110,7 +110,7 @@ export function KhaltiWebView({ visible, native_params, onSuccess, onFailure, on
 
         {loading && (
           <View style={styles.loadingOverlay}>
-            <ActivityIndicator size="large" color="#5C2D91" />
+            <ActivityIndicator size="large" color="#5E338D" />
             <Text style={styles.loadingText}>Loading Khalti...</Text>
           </View>
         )}
@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   headerLeft: { flexDirection: "row", alignItems: "center", gap: 8 },
-  dot: { width: 12, height: 12, borderRadius: 6, backgroundColor: "#5C2D91" },
+  dot: { width: 12, height: 12, borderRadius: 6, backgroundColor: "#5E338D" },
   title: { fontSize: 17, fontWeight: "700", color: "#111" },
   cancelBtn: { fontSize: 15, color: "#007AFF", fontWeight: "500" },
   loadingOverlay: {
@@ -160,6 +160,6 @@ const styles = StyleSheet.create({
     zIndex: 10,
     gap: 12,
   },
-  loadingText: { fontSize: 14, color: "#5C2D91", fontWeight: "500" },
+  loadingText: { fontSize: 14, color: "#5E338D", fontWeight: "500" },
   webview: { flex: 1 },
 });

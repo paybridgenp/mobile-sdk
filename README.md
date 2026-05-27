@@ -1,6 +1,6 @@
 # @paybridge-np/mobile-sdk
 
-Official React Native SDK for [PayBridge NP](https://paybridgenp.com) — accept eSewa and Khalti payments natively in your mobile app.
+Official React Native SDK for [PayBridgeNP](https://paybridgenp.com) — accept eSewa and Khalti payments natively in your mobile app.
 
 ## Requirements
 
@@ -29,14 +29,14 @@ Your backend creates a checkout session using your secret API key. The session i
 
 ```
 Your backend  →  POST /v1/mobile/session (API key)  →  { session_id, native_params, ... }
-Mobile app    →  ProviderSheet / usePayBridge        →  onSuccess(result)
+Mobile app    →  ProviderSheet / usePayBridgeNP        →  onSuccess(result)
 ```
 
 ---
 
 ## Backend: create a session
 
-Call `POST /v1/mobile/session` from your server with your PayBridge API key:
+Call `POST /v1/mobile/session` from your server with your PayBridgeNP API key:
 
 ```bash
 curl -X POST https://api.paybridgenp.com/v1/mobile/session \
@@ -71,15 +71,15 @@ Response:
 
 ## Usage
 
-### Option A - `usePayBridge` hook (recommended)
+### Option A - `usePayBridgeNP` hook (recommended)
 
 Lazy mode: show both providers, create the session only after the user picks one.
 
 ```tsx
-import { usePayBridge, ProviderSheet } from "@paybridge-np/mobile-sdk";
+import { usePayBridgeNP, ProviderSheet } from "@paybridge-np/mobile-sdk";
 
 export default function CheckoutScreen() {
-  const { present, sheetProps } = usePayBridge({
+  const { present, sheetProps } = usePayBridgeNP({
     createSession: async (provider) => {
       const res = await fetch("https://your-backend.com/api/mobile-session", {
         method: "POST",
@@ -109,7 +109,7 @@ Use this when your backend picks the provider before showing the sheet.
 
 ```tsx
 import { useState, useEffect } from "react";
-import { usePayBridge, ProviderSheet } from "@paybridge-np/mobile-sdk";
+import { usePayBridgeNP, ProviderSheet } from "@paybridge-np/mobile-sdk";
 import type { MobileSession } from "@paybridge-np/mobile-sdk";
 
 export default function CheckoutScreen() {
@@ -125,7 +125,7 @@ export default function CheckoutScreen() {
       .then(setSession);
   }, []);
 
-  const { present, sheetProps } = usePayBridge({
+  const { present, sheetProps } = usePayBridgeNP({
     session,
     onSuccess: (result) => console.log("paid", result.payment_id),
     onFailure: (result) => console.log("failed", result.error),
@@ -160,7 +160,7 @@ import { ProviderSheet } from "@paybridge-np/mobile-sdk";
 
 ## API reference
 
-### `usePayBridge(options)`
+### `usePayBridgeNP(options)`
 
 | Option | Type | Description |
 |---|---|---|
@@ -176,13 +176,13 @@ Returns `{ present, dismiss, isVisible, sheetProps }`.
 
 ### `ProviderSheet` props
 
-Same options as `usePayBridge`, plus `visible: boolean`.
+Same options as `usePayBridgeNP`, plus `visible: boolean`.
 
 ### `PayBridgeMobileConfig`
 
 | Field | Default | Description |
 |---|---|---|
-| `baseUrl` | `https://api.paybridgenp.com` | PayBridge API base URL |
+| `baseUrl` | `https://api.paybridgenp.com` | PayBridgeNP API base URL |
 | `timeout` | `30000` | Request timeout in ms |
 
 ### `CheckoutResult`
@@ -209,7 +209,7 @@ Use `sk_test_...` keys on your backend.
 - Password: `Nepal@123`
 - Token: `123456`
 
-**Khalti sandbox** - handled automatically via your `sk_test_...` PayBridge key.
+**Khalti sandbox** - handled automatically via your `sk_test_...` PayBridgeNP key.
 
 ---
 

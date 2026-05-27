@@ -266,7 +266,7 @@ export function ProviderSheet({
               )}
             </View>
 
-            <Text style={styles.footer}>Powered by PayBridge NP</Text>
+            <Text style={styles.footer}>Powered by PayBridgeNP</Text>
           </SafeAreaView>
         </Animated.View>
       </Modal>

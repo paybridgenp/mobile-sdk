@@ -1,7 +1,7 @@
 export type Provider = "esewa" | "khalti";
 
 export type PayBridgeMobileConfig = {
-  /** PayBridge API base URL. Default: https://api.paybridgenp.com */
+  /** PayBridgeNP API base URL. Default: https://api.paybridgenp.com */
   baseUrl?: string;
   /** Request timeout in ms. Default: 30000 */
   timeout?: number;
@@ -26,7 +26,7 @@ export type CreateMobileSessionParams = {
 
 /**
  * Returned by your backend after calling POST /v1/mobile/session.
- * Pass this directly to PayBridgeSheet or usePayBridge.
+ * Pass this directly to PayBridgeSheet or usePayBridgeNP.
  * Never store this on the device — it expires in 15 minutes.
  */
 export type MobileSession = {

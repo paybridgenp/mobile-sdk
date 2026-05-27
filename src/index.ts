@@ -1,6 +1,6 @@
 export { ProviderSheet } from "./ui/ProviderSheet";
 export { ProviderButton } from "./ui/ProviderButton";
-export { usePayBridge } from "./hooks/usePayBridge";
+export { usePayBridgeNP } from "./hooks/usePayBridgeNP";
 export type {
   MobileSession,
   CreateMobileSessionParams,

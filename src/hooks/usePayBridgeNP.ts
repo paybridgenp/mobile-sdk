@@ -45,7 +45,7 @@ type UsePayBridgeReturn = {
    *
    * @example
    * ```tsx
-   * const { present, sheetProps } = usePayBridge({ ... });
+   * const { present, sheetProps } = usePayBridgeNP({ ... });
    *
    * <Button onPress={present} title="Pay Now" />
    * <ProviderSheet {...sheetProps} />
@@ -55,11 +55,11 @@ type UsePayBridgeReturn = {
 };
 
 /**
- * Manages PayBridge sheet visibility and wires callbacks.
+ * Manages PayBridgeNP sheet visibility and wires callbacks.
  *
  * @example — lazy mode (user picks provider)
  * ```tsx
- * const { present, sheetProps } = usePayBridge({
+ * const { present, sheetProps } = usePayBridgeNP({
  *   createSession: async (provider) => {
  *     const res = await fetch("/api/mobile-session", {
  *       method: "POST",
@@ -79,7 +79,7 @@ type UsePayBridgeReturn = {
  *
  * @example — pre-built session mode
  * ```tsx
- * const { present, sheetProps } = usePayBridge({
+ * const { present, sheetProps } = usePayBridgeNP({
  *   session,
  *   onSuccess: (r) => console.log("paid", r.payment_id),
  *   onFailure: (r) => console.log("failed", r.error),
@@ -87,7 +87,7 @@ type UsePayBridgeReturn = {
  * });
  * ```
  */
-export function usePayBridge({
+export function usePayBridgeNP({
   session,
   createSession,
   amount,
@@ -101,7 +101,7 @@ export function usePayBridge({
   const present = useCallback(() => {
     if (!session && !createSession) {
       console.warn(
-        "[PayBridge] usePayBridge: pass either `session` or `createSession` before calling present().",
+        "[PayBridgeNP] usePayBridgeNP: pass either `session` or `createSession` before calling present().",
       );
       return;
     }
