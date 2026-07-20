@@ -1,6 +1,6 @@
 # @paybridge-np/mobile-sdk
 
-Official React Native SDK for [PayBridgeNP](https://paybridgenp.com) — accept eSewa and Khalti payments natively in your mobile app.
+Official React Native SDK for [PayBridgeNP](https://paybridgenp.com) - accept eSewa and Khalti payments natively in your mobile app.
 
 ## Requirements
 
