@@ -31,7 +31,7 @@ export class MobileHttpClient {
     const url = `${this.baseUrl}${path}`;
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
-      "User-Agent": "PayBridgeNP-MobileSDK/1.0.2",
+      "User-Agent": "PayBridgeNP-MobileSDK/1.0.3",
     };
 
     let attempt = 0;

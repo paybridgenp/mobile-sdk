@@ -51,7 +51,7 @@ export type CheckoutResult = {
 
 export type VerifyResponse = {
   status: "success";
-  payment_id: string;
+  payment_id: string | null;
   amount: number;
   provider: string;
   provider_ref: string | null;

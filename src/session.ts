@@ -34,7 +34,7 @@ export async function verifyPayment(
 
   return {
     status: "success",
-    payment_id: data.payment_id,
+    payment_id: data.payment_id ?? undefined,
     amount: data.amount,
     provider: data.provider as Provider,
     provider_ref: data.provider_ref ?? undefined,

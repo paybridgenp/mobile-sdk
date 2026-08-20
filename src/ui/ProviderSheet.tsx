@@ -194,8 +194,7 @@ export function ProviderSheet({
 
   // Which providers to show: if session is pre-built, show only that provider;
   // if lazy, show all until one is chosen.
-  const showKhalti = !session || session.provider === "khalti";
-  const showEsewa = !session || session.provider === "esewa";
+  const availableLegacyProviders: Provider[] = session ? [session.provider] : ["khalti", "esewa"];
 
   return (
     <>
@@ -246,7 +245,7 @@ export function ProviderSheet({
                 />
               ) : (
                 <>
-                  {showKhalti && (
+                  {availableLegacyProviders.includes("khalti") && (
                     <ProviderButton
                       provider="khalti"
                       onPress={() => void handleSelectProvider("khalti")}
@@ -254,7 +253,7 @@ export function ProviderSheet({
                       disabled={isBusy && creatingProvider !== "khalti"}
                     />
                   )}
-                  {showEsewa && (
+                  {availableLegacyProviders.includes("esewa") && (
                     <ProviderButton
                       provider="esewa"
                       onPress={() => void handleSelectProvider("esewa")}
@@ -298,7 +297,7 @@ export function ProviderSheet({
 
 const styles = StyleSheet.create({
   backdrop: {
-    ...StyleSheet.absoluteFillObject,
+    position: "absolute", top: 0, right: 0, bottom: 0, left: 0,
     backgroundColor: "rgba(0,0,0,0.45)",
   },
   sheet: {

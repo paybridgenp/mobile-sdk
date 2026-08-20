@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   loadingOverlay: {
-    ...StyleSheet.absoluteFillObject,
+    position: "absolute", top: 0, right: 0, bottom: 0, left: 0,
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",

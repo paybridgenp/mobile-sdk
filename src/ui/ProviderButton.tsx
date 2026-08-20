@@ -5,25 +5,24 @@ import {
   Text,
   ActivityIndicator,
   StyleSheet,
-  Image,
 } from "react-native";
 import type { Provider } from "../types";
 
 const PROVIDERS: Record<
   Provider,
-  { name: string; subtitle: string; color: string; logoUri: string }
+  { name: string; subtitle: string; color: string; short: string }
 > = {
   khalti: {
     name: "Khalti",
     subtitle: "Digital wallet & bank transfer",
     color: "#5E338D",
-    logoUri: "https://cdn.brandfetch.io/domain/khalti.com?c=1idpK8WCPDflcXYNlms",
+    short: "K",
   },
   esewa: {
     name: "eSewa",
     subtitle: "Digital wallet & online banking",
     color: "#3cc850",
-    logoUri: "https://cdn.brandfetch.io/domain/esewa.com.np?c=1idpK8WCPDflcXYNlms",
+    short: "e",
   },
 };
 
@@ -45,11 +44,7 @@ export function ProviderButton({ provider, onPress, loading, disabled }: Props) 
       style={[styles.button, disabled && styles.buttonDisabled]}
     >
       <View style={styles.left}>
-        <Image
-          source={{ uri: meta.logoUri }}
-          style={styles.logo}
-          resizeMode="contain"
-        />
+        <View style={[styles.logo, styles.logoFallback]}><Text style={styles.logoText}>{meta.short}</Text></View>
         <View>
           <Text style={styles.name}>{meta.name}</Text>
           <Text style={styles.subtitle}>{meta.subtitle}</Text>
@@ -97,6 +92,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     backgroundColor: "#F5F5F5",
   },
+  logoFallback: { alignItems: "center", justifyContent: "center" },
+  logoText: { fontSize: 19, fontWeight: "700", color: "#333" },
   name: {
     fontSize: 15,
     fontWeight: "600",

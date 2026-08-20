@@ -1,218 +1,102 @@
 # @paybridge-np/mobile-sdk
 
-Official React Native SDK for [PayBridgeNP](https://paybridgenp.com) - accept eSewa and Khalti payments natively in your mobile app.
+The React Native payment sheet for PayBridgeNP. Your backend creates one mobile session; the SDK presents only the payment methods frozen in that server response. The app never sends an amount, constructs a bank-payment URL, or treats a client callback as payment proof.
 
-## Requirements
-
-- React Native >= 0.73 (or Expo SDK >= 50)
-- `react-native-webview` >= 13
-- `react-native-safe-area-context` >= 4
-
-## Installation
+## Install
 
 ```bash
 npm install @paybridge-np/mobile-sdk react-native-webview react-native-safe-area-context
 ```
 
-```bash
-# Expo
-npx expo install @paybridge-np/mobile-sdk react-native-webview react-native-safe-area-context
-```
+The SDK's QR renderer and Fonepay event stream are JavaScript-only dependencies, so they need no native linking. `react-native-webview` and `react-native-safe-area-context` remain peer dependencies.
 
-> **Expo Go compatible** - no custom dev build or config plugin required.
-
----
-
-## How it works
-
-Your backend creates a checkout session using your secret API key. The session is passed to the mobile SDK - your API key never touches the device.
-
-```
-Your backend  →  POST /v1/mobile/session (API key)  →  { session_id, native_params, ... }
-Mobile app    →  ProviderSheet / usePayBridgeNP        →  onSuccess(result)
-```
-
----
-
-## Backend: create a session
-
-Call `POST /v1/mobile/session` from your server with your PayBridgeNP API key:
-
-```bash
-curl -X POST https://api.paybridgenp.com/v1/mobile/session \
-  -H "Authorization: Bearer sk_live_..." \
-  -H "Content-Type: application/json" \
-  -d '{
-    "amount": 5000,
-    "provider": "khalti",
-    "currency": "NPR",
-    "customer": { "name": "Ram Bahadur", "phone": "98XXXXXXXX" }
-  }'
-```
-
-Response:
+Expo Go is enough to preview the sheet and hosted eSewa/Khalti screens. Native QR sharing and reliable installed-app detection require the config plugin and a development build:
 
 ```json
 {
-  "session_id": "cs_XXXX",
-  "expires_at": "2026-04-14T12:00:00Z",
-  "provider": "khalti",
-  "amount": 5000,
-  "native_params": { ... }
+  "expo": {
+    "scheme": "myapp",
+    "plugins": ["@paybridge-np/mobile-sdk"]
+  }
 }
 ```
 
-- `amount` is in **paisa** (1 NPR = 100 paisa)
-- `provider` must be `"esewa"` or `"khalti"`
-- Sessions expire in **15 minutes**
-- Use `sk_test_...` keys for sandbox, `sk_live_...` for production
+After adding the plugin, rebuild the native app (`npx expo prebuild` and your normal development-build command). Expo Go cannot apply native app-query configuration. eSewa's sandbox Intent app is currently Android-only.
 
----
+## Use the payment sheet
 
-## Usage
-
-### Option A - `usePayBridgeNP` hook (recommended)
-
-Lazy mode: show both providers, create the session only after the user picks one.
-
-```tsx
-import { usePayBridgeNP, ProviderSheet } from "@paybridge-np/mobile-sdk";
-
-export default function CheckoutScreen() {
-  const { present, sheetProps } = usePayBridgeNP({
-    createSession: async (provider) => {
-      const res = await fetch("https://your-backend.com/api/mobile-session", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ provider, amount: 5000 }),
-      });
-      return res.json();
-    },
-    amount: 5000, // paisa - shown in the sheet before session is created
-    onSuccess: (result) => console.log("paid", result.payment_id),
-    onFailure: (result) => console.log("failed", result.error),
-    onCancel: () => console.log("cancelled"),
-  });
-
-  return (
-    <>
-      <Button title="Pay NPR 50" onPress={present} />
-      <ProviderSheet {...sheetProps} />
-    </>
-  );
-}
-```
-
-### Option B - pre-built session
-
-Use this when your backend picks the provider before showing the sheet.
-
-```tsx
-import { useState, useEffect } from "react";
-import { usePayBridgeNP, ProviderSheet } from "@paybridge-np/mobile-sdk";
-import type { MobileSession } from "@paybridge-np/mobile-sdk";
-
-export default function CheckoutScreen() {
-  const [session, setSession] = useState<MobileSession | null>(null);
-
-  useEffect(() => {
-    fetch("https://your-backend.com/api/mobile-session", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ provider: "khalti", amount: 5000 }),
-    })
-      .then((r) => r.json())
-      .then(setSession);
-  }, []);
-
-  const { present, sheetProps } = usePayBridgeNP({
-    session,
-    onSuccess: (result) => console.log("paid", result.payment_id),
-    onFailure: (result) => console.log("failed", result.error),
-    onCancel: () => console.log("cancelled"),
-  });
-
-  return (
-    <>
-      <Button title="Pay" onPress={present} disabled={!session} />
-      <ProviderSheet {...sheetProps} />
-    </>
-  );
-}
-```
-
-### Option C - `ProviderSheet` directly
-
-```tsx
-import { ProviderSheet } from "@paybridge-np/mobile-sdk";
-
-<ProviderSheet
-  visible={sheetVisible}
-  createSession={handleCreateSession}
-  amount={5000}
-  onSuccess={handleSuccess}
-  onFailure={handleFailure}
-  onCancel={handleCancel}
-/>
-```
-
----
-
-## API reference
-
-### `usePayBridgeNP(options)`
-
-| Option | Type | Description |
-|---|---|---|
-| `session` | `MobileSession \| null` | Pre-built session from your backend |
-| `createSession` | `(provider) => Promise<MobileSession>` | Lazy factory - called when user picks a provider |
-| `amount` | `number` | Amount in paisa - shown before session is created (lazy mode) |
-| `config` | `PayBridgeMobileConfig` | Optional config (see below) |
-| `onSuccess` | `(result: CheckoutResult) => void` | Called on successful payment |
-| `onFailure` | `(result: CheckoutResult) => void` | Called on failed payment |
-| `onCancel` | `() => void` | Called when user cancels |
-
-Returns `{ present, dismiss, isVisible, sheetProps }`.
-
-### `ProviderSheet` props
-
-Same options as `usePayBridgeNP`, plus `visible: boolean`.
-
-### `PayBridgeMobileConfig`
-
-| Field | Default | Description |
-|---|---|---|
-| `baseUrl` | `https://api.paybridgenp.com` | PayBridgeNP API base URL |
-| `timeout` | `30000` | Request timeout in ms |
-
-### `CheckoutResult`
+Create the session on your backend with your `sk_` key, omitting `provider`:
 
 ```ts
-type CheckoutResult = {
-  status: "success" | "failed" | "cancelled";
-  payment_id?: string;
-  amount?: number;        // paisa
-  provider?: "esewa" | "khalti";
-  provider_ref?: string;
-  error?: string;
+// server only
+const session = await paybridge.mobile.createSession({
+  amount: 5000, // paisa
+  customer: { name: "Ram Bahadur", email: "ram@example.com", phone: "9800000000" },
+});
+```
+
+Pass that response through your own authenticated backend endpoint, then use the hook. The application builds no provider picker.
+
+Your backend should send one stable `Idempotency-Key` per merchant order when it calls `POST /v1/mobile/session`. Retrying then returns the original session instead of creating a second payable session.
+
+```tsx
+import { Button } from "react-native";
+import { PaymentSheet, usePaymentSheet } from "@paybridge-np/mobile-sdk";
+
+export function Checkout() {
+  const { present, loading, paymentSheetProps } = usePaymentSheet({
+    fetchSession: async () => {
+      const response = await fetch("https://merchant.example/mobile-payment-session");
+      if (!response.ok) throw new Error("Could not start payment");
+      return response.json();
+    },
+    publishableKey: "pk_live_…",
+    // Required for eSewa Intent. Configure the same scheme in your app.
+    returnUrl: "myapp://paybridge/return",
+    // Use config: { baseUrl: "https://staging-api.example.com" } outside production.
+    appearance: {
+      colors: { light: { primary: "#155EEF" }, dark: { primary: "#84ADFF" } },
+      radius: 16,
+      fonts: { family: "System", headingFamily: "System" },
+      primaryButton: { backgroundColor: "#155EEF", textColor: "#fff" },
+    },
+    onComplete: ({ status, sessionId }) => {
+      if (status === "success") console.log("Server reports paid", sessionId);
+    },
+    onCancel: () => console.log("Customer closed the sheet"),
+    onError: (error) => console.warn(error.message),
+  });
+
+  return <>
+    <Button title="Pay" disabled={loading} onPress={() => void present()} />
+    <PaymentSheet {...paymentSheetProps} />
+  </>;
+}
+```
+
+`fetchSession` must return the provider-omitted response from `POST /v1/mobile/session`:
+
+```ts
+type MobilePaymentSession = {
+  session_id: string;
+  client_secret: string;
+  amount: number; // paisa
+  mode: "sandbox" | "live";
+  expires_at: string;
+  methods: MobileMethod[];
 };
 ```
 
----
+The sheet renders only server-supplied methods. When a supported bank app is installed, Bank App is placed before Fonepay QR and a single installed bank opens directly; multiple installed banks use a compact in-sheet picker. eSewa Intent is used only when the feature is eligible and the eSewa app is detected; otherwise the sheet uses eSewa's hosted checkout.
 
-## Sandbox testing
+Payment completion is reported only after `GET /v1/mobile/session/:id/status` says `success`. Fonepay listens to its authenticated SSE endpoint, shows waiting/scanned states, and safely refreshes an expired display QR while its late-payment listener remains active. Eligible eSewa sessions open Intent when `returnUrl` is configured; if Intent cannot open, the buyer can retry it or wait for its provider-side cancellation before choosing another method. Other eSewa sessions use ePay v2 directly. Cancelling an individual provider returns to the method picker only after reconciliation and, for eSewa Intent, provider-side cancellation. Closing the whole sheet calls `onCancel`; it dismisses the UI and does not mark the server session cancelled. Provider WebViews have a navigation allowlist, cancel, timeout/retry, and offline recovery.
 
-Use `sk_test_...` keys on your backend.
+For process-death recovery, keep the active session in platform-secure storage and call the hook's `resume(session)` after restoring your checkout screen. The SDK deliberately does not own merchant navigation or silently persist the client secret. Clear the stored session after `onComplete` or an explicit sheet close.
 
-**eSewa sandbox test credentials**
-- eSewa ID: `9806800001` (or 02/03/04/05)
-- Password: `Nepal@123`
-- Token: `123456`
+## Appearance
 
-**Khalti sandbox** - handled automatically via your `sk_test_...` PayBridgeNP key.
+Appearance accepts color tokens for `light` and `dark`, a radius, font families, and the primary-button colors. It deliberately does not accept layout overrides, so payment controls retain a predictable, reviewable structure.
 
----
+## Legacy API
 
-## License
-
-MIT
+`usePayBridgeNP` and `ProviderSheet` remain exported for existing installs but are deprecated. New integrations should use `usePaymentSheet` and `PaymentSheet`.
