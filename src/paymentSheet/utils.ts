@@ -52,7 +52,10 @@ export function formatAmount(amount: number): string {
 }
 
 export function customerFacingPaymentError(message: string): string {
-  return message.replace(/^\[PayBridgeNP\]\s*/, "");
+  const plain = message.replace(/^\[PayBridgeNP\]\s*/, "");
+  return /^(network request failed|failed to fetch|load failed)$/i.test(plain)
+    ? "Check your connection and try again."
+    : plain;
 }
 
 export function mobileAssetUrl(url: string | undefined, apiBaseUrl: string | undefined): string | undefined {

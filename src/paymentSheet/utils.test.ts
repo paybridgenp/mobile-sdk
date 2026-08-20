@@ -92,6 +92,7 @@ test("QR countdown never outlives its checkout session", () => {
 
 test("customer errors omit the developer-only SDK prefix", () => {
   expect(customerFacingPaymentError("[PayBridgeNP] Provider unavailable")).toBe("Provider unavailable");
+  expect(customerFacingPaymentError("Network request failed")).toBe("Check your connection and try again.");
 });
 
 test("a successful status retry clears only the connection error", () => {
