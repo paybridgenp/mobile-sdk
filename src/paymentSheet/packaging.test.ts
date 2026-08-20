@@ -86,3 +86,11 @@ test("eSewa Intent waits for app detection and never exposes its separate ePay f
   expect(sheet).toContain('if (status === "failed" || status === "cancelled") await chooseAnotherMethod()');
   expect(sheet).not.toContain('bankPicker ? () => void chooseAnotherMethod()');
 });
+
+test("an expired Fonepay QR rotates even after it was scanned", () => {
+  const sheet = readFileSync(join(SDK_ROOT, "src/paymentSheet/PaymentSheet.tsx"), "utf8");
+  const start = sheet.indexOf("secondsUntil(action.expires_at) === 0");
+  const autoRefresh = sheet.slice(start, sheet.indexOf("useEffect(() => {", start));
+  expect(autoRefresh).toContain("void refreshFonepayQr(action)");
+  expect(autoRefresh).not.toContain("scannedQr.current");
+});

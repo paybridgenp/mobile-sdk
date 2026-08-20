@@ -196,7 +196,6 @@ export function PaymentSheet({ visible, session, publishableKey, config, returnU
       seconds > 0 &&
       secondsUntil(action.expires_at) === 0 &&
       (!selectedBank || bankQrVisible) &&
-      scannedQr.current !== action.qr_message &&
       lastAutoRefreshQr.current !== action.qr_message
     ) {
       lastAutoRefreshQr.current = action.qr_message;
