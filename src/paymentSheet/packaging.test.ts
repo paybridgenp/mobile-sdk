@@ -94,3 +94,10 @@ test("an expired Fonepay QR rotates even after it was scanned", () => {
   expect(autoRefresh).toContain("void refreshFonepayQr(action)");
   expect(autoRefresh).not.toContain("scannedQr.current");
 });
+
+test("large text can wrap provider copy without clipping the bank-picker action", () => {
+  const sheet = readFileSync(join(SDK_ROOT, "src/paymentSheet/PaymentSheet.tsx"), "utf8");
+  expect(sheet).not.toContain("<Text numberOfLines={1} style={[styles.rowSub");
+  expect(sheet).toContain('accessibilityLabel="Other payment methods"');
+  expect(sheet).toContain('busy === "change-method" ? "Returning…" : "Methods"');
+});
