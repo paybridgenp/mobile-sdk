@@ -469,7 +469,12 @@ export function PaymentSheet({ visible, session, publishableKey, config, returnU
   const visibleQr = fonepayQr ?? (bankQrVisible ? fonepay : null);
   const fonepayMethod = session.methods.find((method) => method.provider === "fonepay");
   const visibleQrSeconds = visibleQr && session ? payableSeconds(visibleQr.expires_at, session.expires_at) : 0;
-  const dynamic = { backgroundColor: colors.background, borderTopLeftRadius: appearance?.radius ?? 20, borderTopRightRadius: appearance?.radius ?? 20 };
+  // The picker hugs its content (two methods should not sit above 200pt of
+  // empty sheet — seen on device 2026-08-21). States that draw a QR or an
+  // in-flight spinner keep a floor so the sheet does not jump around while
+  // the QR, scanned state and countdown swap in and out.
+  const needsFloor = !!visibleQr || intentPhase !== "idle";
+  const dynamic = { backgroundColor: colors.background, borderTopLeftRadius: appearance?.radius ?? 20, borderTopRightRadius: appearance?.radius ?? 20, minHeight: needsFloor ? 380 : undefined };
   const providerName = action?.provider === "khalti" ? "Khalti" : action?.provider === "esewa" ? "eSewa" : "payment app";
   const isEsewaIntentAction = action?.provider === "esewa" && intentLaunched;
   const exitProviderName = action?.provider === "khalti" ? "Khalti" : action?.provider === "esewa" ? "eSewa" : action?.provider === "fonepay" ? "Fonepay" : null;
@@ -500,7 +505,7 @@ export function PaymentSheet({ visible, session, publishableKey, config, returnU
 const styles = StyleSheet.create({
   modalRoot: { flex: 1 },
   backdrop: { flex: 1, justifyContent: "flex-end", backgroundColor: "rgba(0,0,0,.42)" },
-  sheet: { minHeight: 380, maxHeight: "86%", paddingHorizontal: 18, paddingBottom: 12 },
+  sheet: { maxHeight: "86%", paddingHorizontal: 18, paddingBottom: 12 },
   header: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingTop: 14, paddingBottom: 10 },
   headerCopy: { flex: 1, paddingRight: 12 },
   headerAction: { minWidth: 44, minHeight: 44, alignItems: "flex-end", justifyContent: "center" },

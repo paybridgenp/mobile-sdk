@@ -45,13 +45,16 @@ const ACTIVE_KEY = "pbdemo.activeSession";
 
 // ── Catalog (prices in paisa: NPR 1 = 100 paisa) ─────────────────────────────
 
-type Product = { id: string; name: string; blurb: string; price: number; emoji: string };
+type Product = { id: string; name: string; blurb: string; price: number; tile: string; tint: string };
 
+// Initial tiles instead of emoji or images: identical on every device and
+// simulator (some simulator images ship without an emoji font), and nothing
+// to license for the public repo.
 const PRODUCTS: Product[] = [
-  { id: "tea", name: "Ilam green tea, 100 g", blurb: "First flush, hand rolled", price: 45_000, emoji: "🍵" },
-  { id: "topi", name: "Dhaka topi", blurb: "Handloom, Palpa", price: 65_000, emoji: "🧢" },
-  { id: "honey", name: "Mad honey, 250 g", blurb: "Wild cliff honey, Lamjung", price: 120_000, emoji: "🍯" },
-  { id: "candle", name: "Lokta paper candle set", blurb: "Three scents", price: 28_000, emoji: "🕯️" },
+  { id: "tea", name: "Ilam green tea, 100 g", blurb: "First flush, hand rolled", price: 45_000, tile: "Tea", tint: "#2E7D4F" },
+  { id: "topi", name: "Dhaka topi", blurb: "Handloom, Palpa", price: 65_000, tile: "Topi", tint: "#B4532A" },
+  { id: "honey", name: "Mad honey, 250 g", blurb: "Wild cliff honey, Lamjung", price: 120_000, tile: "Honey", tint: "#B8860B" },
+  { id: "candle", name: "Lokta paper candle set", blurb: "Three scents", price: 28_000, tile: "Candle", tint: "#6B4E9B" },
 ];
 
 function npr(paisa: number): string {
@@ -233,7 +236,7 @@ function Shop() {
             const q = qty[p.id] ?? 0;
             return (
               <View key={p.id} style={[styles.row, i > 0 && { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: c.border }]}>
-                <Text style={styles.emoji}>{p.emoji}</Text>
+                <View style={[styles.tile, { backgroundColor: p.tint }]}><Text style={styles.tileText}>{p.tile.slice(0, 2).toUpperCase()}</Text></View>
                 <View style={{ flex: 1 }}>
                   <Text style={[styles.name, { color: c.ink }]}>{p.name}</Text>
                   <Text style={[styles.blurb, { color: c.muted }]}>{p.blurb} · {npr(p.price)}</Text>
@@ -360,7 +363,8 @@ const styles = StyleSheet.create({
   h3: { fontSize: 15, fontWeight: "700", marginBottom: 8 },
   card: { borderWidth: 1, borderRadius: 16, paddingHorizontal: 14, marginBottom: 16 },
   row: { flexDirection: "row", alignItems: "center", gap: 12, paddingVertical: 12 },
-  emoji: { fontSize: 26, width: 34, textAlign: "center" },
+  tile: { width: 38, height: 38, borderRadius: 10, alignItems: "center", justifyContent: "center" },
+  tileText: { color: "#fff", fontWeight: "800", fontSize: 12, letterSpacing: 0.5 },
   name: { fontSize: 15, fontWeight: "600" },
   blurb: { fontSize: 12.5, marginTop: 2 },
   stepper: { flexDirection: "row", alignItems: "center", borderWidth: 1, borderRadius: 10, overflow: "hidden" },
