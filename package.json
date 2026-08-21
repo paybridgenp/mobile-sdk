@@ -50,6 +50,7 @@
     "typescript": "^5.7.0",
     "@types/react": "^18",
     "@types/react-native": "^0.73",
-    "react-native-safe-area-context": "*"
+    "react-native-safe-area-context": "*",
+    "expo": "~54.0.37"
   }
 }
