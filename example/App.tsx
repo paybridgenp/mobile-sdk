@@ -114,12 +114,19 @@ function Shop() {
   );
   const total = lines.reduce((sum, l) => sum + l.price * l.qty, 0);
 
-  // One stable reference per cart contents: retrying the same order returns
-  // the same session on the server (Idempotency-Key), never a second payable one.
+  // One reference per payment ATTEMPT. It stays the same while an attempt is
+  // in flight (so a retried fetchSession gets the same session back through
+  // the Idempotency-Key, never a second payable one) and changes when the
+  // buyer closes the sheet, finishes, or hits an error. The first cut keyed it
+  // on the cart only, so Pay after Close reused the old session and the sheet
+  // resumed straight into the provider the buyer had just left.
+  const [attempt, setAttempt] = useState(0);
   const reference = useMemo(() => {
     const sig = lines.map((l) => `${l.id}x${l.qty}`).join("_") || "empty";
-    return `pbdemo-${sig}-${Math.floor(Date.now() / 60_000).toString(36)}`;
-  }, [lines]);
+    return `pbdemo-${sig}-${Date.now().toString(36)}-${attempt}`;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lines, attempt]);
+  const nextAttempt = useCallback(() => setAttempt((n) => n + 1), []);
 
   const { present, resume, loading, paymentSheetProps } = usePaymentSheet({
     fetchSession: async () => {
@@ -147,6 +154,7 @@ function Shop() {
     },
     onComplete: (result) => {
       void AsyncStorage.removeItem(ACTIVE_KEY);
+      nextAttempt();
       setLastOrder({ reference, amount: total, sessionId: result.sessionId, status: result.status });
       if (result.status === "success") {
         setBanner("Paid. Your server's webhook is the final word, but the sheet heard success.");
@@ -161,10 +169,12 @@ function Shop() {
     },
     onCancel: () => {
       void AsyncStorage.removeItem(ACTIVE_KEY);
+      nextAttempt();
       setBanner("Sheet closed. Nothing was charged.");
     },
     onError: (error) => {
       setBanner(error.message);
+      nextAttempt();
     },
   });
 
