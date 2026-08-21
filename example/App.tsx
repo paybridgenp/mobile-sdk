@@ -51,6 +51,7 @@ type Product = { id: string; name: string; blurb: string; price: number; tile: s
 // simulator (some simulator images ship without an emoji font), and nothing
 // to license for the public repo.
 const PRODUCTS: Product[] = [
+  { id: "chai", name: "Masala chai, 1 cup", blurb: "Tea stall price", price: 1_000, tile: "Chai", tint: "#8B5E34" },
   { id: "tea", name: "Ilam green tea, 100 g", blurb: "First flush, hand rolled", price: 45_000, tile: "Tea", tint: "#2E7D4F" },
   { id: "topi", name: "Dhaka topi", blurb: "Handloom, Palpa", price: 65_000, tile: "Topi", tint: "#B4532A" },
   { id: "honey", name: "Mad honey, 250 g", blurb: "Wild cliff honey, Lamjung", price: 120_000, tile: "Honey", tint: "#B8860B" },
@@ -102,7 +103,7 @@ function Shop() {
 
   // Default cart stays under NPR 1,000: sandbox Fonepay refuses larger payments
   // (it is real money on the merchant's real credential, so it is capped).
-  const [qty, setQty] = useState<Record<string, number>>({ tea: 1 });
+  const [qty, setQty] = useState<Record<string, number>>({ chai: 1 });
   const [name, setName] = useState("Asha Rai");
   const [phone, setPhone] = useState("9841000000");
   const [email, setEmail] = useState("asha@example.com");
