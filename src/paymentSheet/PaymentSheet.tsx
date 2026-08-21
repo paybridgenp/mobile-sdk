@@ -71,6 +71,12 @@ async function isEsewaInstalled(): Promise<boolean> {
 
 export function PaymentSheet({ visible, session, publishableKey, config, returnUrl, appearance, onComplete, onCancel, onError }: PaymentSheetProps) {
   const [action, setAction] = useState<MobileAction | null>(null);
+  // The provider the buyer was last sent to, kept across an action reset so the
+  // "still active" state can name it. Declared up here with the other hooks: an
+  // early return sits between here and the render, and a hook below it changed
+  // the hook count between renders ("Rendered more hooks than during the
+  // previous render", owner's phone, 2026-08-21).
+  const lastProviderRef = useRef<string | null>(null);
   const [confirmation, setConfirmation] = useState<{ sessionId: string; method: string } | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -475,10 +481,6 @@ export function PaymentSheet({ visible, session, publishableKey, config, returnU
   // the QR, scanned state and countdown swap in and out.
   const needsFloor = !!visibleQr || intentPhase !== "idle";
   const dynamic = { backgroundColor: colors.background, borderTopLeftRadius: appearance?.radius ?? 20, borderTopRightRadius: appearance?.radius ?? 20, minHeight: needsFloor ? 380 : undefined };
-  // The provider the buyer was last sent to, kept across an action reset so the
-  // "still active" state can name it (it said "payment app payment still
-  // active" on device when the action had already been cleared).
-  const lastProviderRef = useRef<string | null>(null);
   if (action?.provider) lastProviderRef.current = action.provider;
   const confirmedProvider = confirmation?.method === "fonepay_qr" || confirmation?.method === "bank_intent" ? "fonepay" : confirmation?.method ?? null;
   const knownProvider = action?.provider ?? lastProviderRef.current ?? confirmedProvider;
