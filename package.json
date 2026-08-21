@@ -1,7 +1,7 @@
 {
   "name": "@paybridge-np/mobile-sdk",
   "version": "1.0.3",
-  "description": "Official React Native payment sheet for PayBridgeNP",
+  "description": "Official PayBridgeNP React Native payment sheet for Fonepay, eSewa, and Khalti inside iOS and Android apps",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "scripts": {

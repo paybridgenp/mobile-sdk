@@ -1,6 +1,6 @@
 # @paybridge-np/mobile-sdk
 
-The React Native payment sheet for PayBridgeNP. Your backend creates one mobile session; the SDK presents only the payment methods frozen in that server response. The app never sends an amount, constructs a bank-payment URL, or treats a client callback as payment proof.
+Official PayBridgeNP React Native payment sheet for Fonepay, eSewa, and Khalti inside iOS and Android apps. Your backend creates one mobile session; the SDK presents only the payment methods frozen in that server response. The app never sends an amount, constructs a bank-payment URL, or treats a client callback as payment proof.
 
 ## Install
 
