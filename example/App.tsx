@@ -176,7 +176,10 @@ function Shop() {
       setBanner("Sheet closed. Nothing was charged.");
     },
     onError: (error) => {
-      setBanner(error.message);
+      // The SDK reports the raw cause (a fetch says "Network request failed");
+      // the shop tells the buyer what to do instead.
+      const offline = /network request failed|timed out|failed to fetch/i.test(error.message);
+      setBanner(offline ? "Could not reach the payment server. Check your connection and tap Pay again." : error.message);
       nextAttempt();
     },
   });
