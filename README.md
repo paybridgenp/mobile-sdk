@@ -1,5 +1,9 @@
 # @paybridge-np/mobile-sdk
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/paybridgenp/mobile-sdk/main/assets/payment-sheet.webp" width="280" alt="The PayBridgeNP payment sheet on iOS showing Bank App, Fonepay QR, eSewa and Khalti" />
+</p>
+
 Official PayBridgeNP React Native payment sheet for Fonepay, eSewa, and Khalti inside iOS and Android apps. Your backend creates one mobile session; the SDK presents only the payment methods frozen in that server response. The app never sends an amount, constructs a bank-payment URL, or treats a client callback as payment proof.
 
 ## Install
@@ -21,7 +25,7 @@ Expo Go is enough to preview the sheet and hosted eSewa/Khalti screens. Native Q
 }
 ```
 
-After adding the plugin, rebuild the native app (`npx expo prebuild` and your normal development-build command). Expo Go cannot apply native app-query configuration. eSewa's sandbox Intent app is currently Android-only.
+`expo` is an optional peer dependency: bare React Native apps install nothing extra, and the plugin is only read by Expo projects that list it. After adding the plugin, rebuild the native app (`npx expo prebuild` and your normal development-build command). Expo Go cannot apply native app-query configuration. eSewa's sandbox Intent app is currently Android-only.
 
 ## Use the payment sheet
 
