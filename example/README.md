@@ -16,7 +16,7 @@ No configuration needed. The app asks PayBridgeNP's public demo endpoint for a *
 
 ## Use your own merchant
 
-1. On **your server**, create the session with your `sk_` key: `POST /v1/mobile/session` with `amount` (paisa) and `customer`, omitting `provider`. Send one stable `Idempotency-Key` per order. The [route this demo uses](https://github.com/paybridgenp/paybridge-np-web/blob/main/src/app/api/demo/mobile-session/route.ts) is a complete example.
+1. On **your server**, create the session with your `sk_` key: `POST /v1/mobile/session` with `amount` (paisa) and `customer`, omitting `provider`. Send one stable `Idempotency-Key` per order. The [mobile SDK guide](https://docs.paybridgenp.com/sdk/mobile) shows a complete server route.
 2. Copy `.env.example` to `.env`, set `EXPO_PUBLIC_PAYBRIDGE_DEMO_API` to your endpoint and `EXPO_PUBLIC_PAYBRIDGE_PUBLISHABLE_KEY` to your `pk_` key.
 3. `bunx expo start`.
 

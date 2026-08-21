@@ -297,7 +297,7 @@ function Shop() {
         ) : null}
 
         <Text style={[styles.foot, { color: c.muted }]}>
-          Test mode. Khalti test wallet 9800000005 · MPIN 1111 · OTP 987654. Fonepay has no sandbox: its test payments are real, capped at NPR 1,000 each.
+          Test mode on the PayBridgeNP demo merchant: eSewa and Khalti (test wallet 9800000005 · MPIN 1111 · OTP 987654). Fonepay QR and bank apps appear when you run this with your own merchant keys; Fonepay has no sandbox, so those test payments are real (capped at NPR 1,000 each).
           {"\n"}Source: github.com/paybridgenp/mobile-sdk/tree/main/example
         </Text>
       </ScrollView>
