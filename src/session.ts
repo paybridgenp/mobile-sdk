@@ -6,12 +6,12 @@
 // the post-payment verification step, which is done from within the SDK.
 
 import { MobileHttpClient } from "./client";
-import type { CheckoutResult, PayBridgeMobileConfig, Provider, VerifyResponse } from "./types";
+import type { CheckoutResult, PayBridgeNPMobileConfig, Provider, VerifyResponse } from "./types";
 
 export async function verifyPayment(
   sessionId: string,
   providerToken: string,
-  config: PayBridgeMobileConfig,
+  config: PayBridgeNPMobileConfig,
 ): Promise<CheckoutResult> {
   const client = new MobileHttpClient(config);
 

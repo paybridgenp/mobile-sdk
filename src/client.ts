@@ -2,7 +2,7 @@
 // HTTP client — thin fetch wrapper, same retry/backoff pattern as the JS SDK
 // ---------------------------------------------------------------------------
 
-import type { PayBridgeMobileConfig } from "./types";
+import type { PayBridgeNPMobileConfig } from "./types";
 
 const DEFAULT_BASE_URL = "https://api.paybridgenp.com";
 const DEFAULT_TIMEOUT = 30_000;
@@ -22,7 +22,7 @@ export class MobileHttpClient {
   private readonly baseUrl: string;
   private readonly timeout: number;
 
-  constructor(config: PayBridgeMobileConfig = {}) {
+  constructor(config: PayBridgeNPMobileConfig = {}) {
     this.baseUrl = (config.baseUrl ?? DEFAULT_BASE_URL).replace(/\/$/, "");
     this.timeout = config.timeout ?? DEFAULT_TIMEOUT;
   }
@@ -31,7 +31,7 @@ export class MobileHttpClient {
     const url = `${this.baseUrl}${path}`;
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
-      "User-Agent": "PayBridgeNP-MobileSDK/1.0.3",
+      "User-Agent": "PayBridgeNP-MobileSDK/1.0.4",
     };
 
     let attempt = 0;

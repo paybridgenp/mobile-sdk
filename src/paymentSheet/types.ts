@@ -1,4 +1,4 @@
-import type { PayBridgeMobileConfig } from "../types";
+import type { PayBridgeNPMobileConfig } from "../types";
 
 export type Bank = {
   name: string;
@@ -59,7 +59,7 @@ export type PaymentSheetOptions = {
   fetchSession: () => Promise<MobilePaymentSession>;
   publishableKey: string;
   /** Override only for staging, local development, or a PayBridgeNP-compatible host. */
-  config?: Pick<PayBridgeMobileConfig, "baseUrl">;
+  config?: Pick<PayBridgeNPMobileConfig, "baseUrl">;
   /** App deep link used by eSewa Intent to return to the merchant app, for example `myapp://paybridge/return`. */
   returnUrl?: string;
   appearance?: PaymentSheetAppearance;

@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import type { CheckoutResult, MobileSession, PayBridgeMobileConfig, Provider } from "../types";
+import type { CheckoutResult, MobileSession, PayBridgeNPMobileConfig, Provider } from "../types";
 
 type UsePayBridgeOptions = {
   /**
@@ -16,7 +16,7 @@ type UsePayBridgeOptions = {
    * Amount in paisa — shown while no session exists yet (lazy mode).
    */
   amount?: number;
-  config?: PayBridgeMobileConfig;
+  config?: PayBridgeNPMobileConfig;
   onSuccess: (result: CheckoutResult) => void;
   onFailure: (result: CheckoutResult) => void;
   onCancel: () => void;
@@ -27,7 +27,7 @@ type SheetProps = {
   session?: MobileSession;
   createSession?: (provider: Provider) => Promise<MobileSession>;
   amount?: number;
-  config?: PayBridgeMobileConfig;
+  config?: PayBridgeNPMobileConfig;
   onSuccess: (result: CheckoutResult) => void;
   onFailure: (result: CheckoutResult) => void;
   onCancel: () => void;

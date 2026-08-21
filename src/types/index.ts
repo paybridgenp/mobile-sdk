@@ -1,11 +1,14 @@
 export type Provider = "esewa" | "khalti";
 
-export type PayBridgeMobileConfig = {
+export type PayBridgeNPMobileConfig = {
   /** PayBridgeNP API base URL. Default: https://api.paybridgenp.com */
   baseUrl?: string;
   /** Request timeout in ms. Default: 30000 */
   timeout?: number;
 };
+
+/** @deprecated Use `PayBridgeNPMobileConfig`. Kept as an alias so existing imports keep compiling. */
+export type PayBridgeMobileConfig = PayBridgeNPMobileConfig;
 
 /**
  * Parameters for POST /v1/mobile/session — called from your backend.

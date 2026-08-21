@@ -11,6 +11,8 @@ export type {
   CheckoutResult,
   CheckoutStatus,
   Provider,
+  PayBridgeNPMobileConfig,
+  /** @deprecated alias of PayBridgeNPMobileConfig */
   PayBridgeMobileConfig,
 } from "./types";
 export type {

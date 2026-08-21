@@ -14,7 +14,7 @@ import { ProviderButton } from "./ProviderButton";
 import { EsewaWebView } from "./EsewaWebView";
 import { KhaltiWebView } from "./KhaltiWebView";
 import { verifyPayment } from "../session";
-import type { CheckoutResult, MobileSession, PayBridgeMobileConfig, Provider } from "../types";
+import type { CheckoutResult, MobileSession, PayBridgeNPMobileConfig, Provider } from "../types";
 
 type Props = {
   visible: boolean;
@@ -31,7 +31,7 @@ type Props = {
   createSession?: (provider: Provider) => Promise<MobileSession>;
   /** Amount in paisa — shown while session is being created in lazy mode */
   amount?: number;
-  config?: PayBridgeMobileConfig;
+  config?: PayBridgeNPMobileConfig;
   onSuccess: (result: CheckoutResult) => void;
   onFailure: (result: CheckoutResult) => void;
   onCancel: () => void;
