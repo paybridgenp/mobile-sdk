@@ -100,7 +100,9 @@ function Shop() {
   const dark = scheme === "dark";
   const c = dark ? palette.dark : palette.light;
 
-  const [qty, setQty] = useState<Record<string, number>>({ tea: 1, topi: 1 });
+  // Default cart stays under NPR 1,000: sandbox Fonepay refuses larger payments
+  // (it is real money on the merchant's real credential, so it is capped).
+  const [qty, setQty] = useState<Record<string, number>>({ tea: 1 });
   const [name, setName] = useState("Asha Rai");
   const [phone, setPhone] = useState("9841000000");
   const [email, setEmail] = useState("asha@example.com");
@@ -291,7 +293,7 @@ function Shop() {
         ) : null}
 
         <Text style={[styles.foot, { color: c.muted }]}>
-          Test mode: no real money moves. Khalti test wallet 9800000005 · MPIN 1111 · OTP 987654.
+          Test mode. Khalti test wallet 9800000005 · MPIN 1111 · OTP 987654. Fonepay has no sandbox: its test payments are real, capped at NPR 1,000 each.
           {"\n"}Source: github.com/paybridgenp/mobile-sdk/tree/main/example
         </Text>
       </ScrollView>
