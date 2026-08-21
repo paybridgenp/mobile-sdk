@@ -51,6 +51,7 @@ export function ExternalPaymentScreen({ action, merchantName, amount, mode, expi
   const loadTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const webView = useRef<WebViewHandle>(null);
   const params = action.native_params;
+  const providerLabel = action.provider === "khalti" ? "Khalti" : action.provider === "esewa" ? "eSewa" : "The payment provider";
   const sourceUrl = action.provider === "khalti" ? String(params.payment_url ?? "") : String(params.form_url ?? "");
   const callbackUrls = externalCallbackUrls(params);
   const callbackOrigins = callbackUrls.map(origin).filter((item): item is string => !!item);
@@ -74,7 +75,7 @@ export function ExternalPaymentScreen({ action, merchantName, amount, mode, expi
     setProblem(null);
     loadTimeout.current = setTimeout(() => {
       setLoading(false);
-      setProblem("The payment page is taking too long. Check your connection and retry.");
+      setProblem("The payment page did not load in time. That is usually the provider or the connection, not your order.");
     }, 45_000);
   }
 
@@ -82,6 +83,9 @@ export function ExternalPaymentScreen({ action, merchantName, amount, mode, expi
     if (loadTimeout.current) clearTimeout(loadTimeout.current);
     loadTimeout.current = null;
     setLoading(false);
+    // A page that arrives after the timeout is still the real payment page:
+    // drop the "not responding" state and let the buyer continue.
+    setProblem(null);
   }
 
   function retry() {
@@ -108,7 +112,15 @@ export function ExternalPaymentScreen({ action, merchantName, amount, mode, expi
           <TouchableOpacity accessibilityRole="button" accessibilityLabel="Close payment" hitSlop={8} style={styles.headerAction} onPress={onCancel}><Text style={styles.closeIcon}>×</Text></TouchableOpacity>
         </View>
         <View style={styles.body}>
-        {problem ? <View style={styles.problem}><Text accessibilityRole="alert" style={styles.problemText}>{problem}</Text><TouchableOpacity accessibilityRole="button" onPress={retry}><Text style={styles.retry}>{action.provider === "esewa" ? "Check status" : "Retry"}</Text></TouchableOpacity></View> : null}
+        {problem ? <View accessibilityLiveRegion="polite" style={styles.problemOverlay}>
+          <Text accessibilityRole="header" style={styles.problemTitle}>{providerLabel} isn’t responding</Text>
+          <Text accessibilityRole="alert" style={styles.problemText}>{problem}</Text>
+          <TouchableOpacity accessibilityRole="button" style={styles.problemPrimary} onPress={retry}><Text style={styles.problemPrimaryText}>{action.provider === "esewa" ? "Check payment status" : "Try again"}</Text></TouchableOpacity>
+          <Text style={styles.problemHint}>{action.provider === "esewa"
+            ? "eSewa may already have this payment open, so it cannot be retried from here. If eSewa stays down, close this and start the payment again."
+            : "If it keeps failing, close this and choose another way to pay."}</Text>
+          <TouchableOpacity accessibilityRole="button" hitSlop={8} style={styles.problemSecondary} onPress={onCancel}><Text style={styles.problemSecondaryText}>Close</Text></TouchableOpacity>
+        </View> : null}
         {loading && !problem ? <View accessibilityLiveRegion="polite" style={styles.loading}><ActivityIndicator size="large" color="#1459D9" /><Text>Opening secure payment…</Text></View> : null}
         <WebView
           ref={webView}
@@ -124,7 +136,7 @@ export function ExternalPaymentScreen({ action, merchantName, amount, mode, expi
           injectedJavaScript={Platform.OS === "ios" ? IOS_INPUT_ZOOM_FIX : undefined}
           onError={() => {
             finishLoading();
-            if (!handledReturn.current) setProblem("Could not load the payment page. Check your connection and retry.");
+            if (!handledReturn.current) setProblem("The payment page could not be loaded. Check your connection, or try again in a moment.");
           }}
           javaScriptEnabled domStorageEnabled style={styles.webview}
         />
@@ -134,5 +146,5 @@ export function ExternalPaymentScreen({ action, merchantName, amount, mode, expi
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff" }, header: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: 16, borderBottomWidth: 1, borderBottomColor: "#e5e7eb" }, headerAction: { minWidth: 44, minHeight: 44, alignItems: "flex-end", justifyContent: "center" }, titleRow: { flexDirection: "row", alignItems: "center", gap: 8 }, merchant: { fontWeight: "700", fontSize: 16, color: "#111827" }, testMode: { borderRadius: 999, backgroundColor: "#FEF3C7", paddingHorizontal: 7, paddingVertical: 3 }, testModeText: { color: "#92400E", fontSize: 10, fontWeight: "800", letterSpacing: 0.5 }, amount: { color: "#6b7280", marginTop: 3 }, closeIcon: { color: "#111827", fontSize: 28, lineHeight: 30, fontWeight: "400" }, body: { flex: 1 }, webview: { flex: 1 }, loading: { position: "absolute", top: 0, right: 0, bottom: 0, left: 0, zIndex: 2, alignItems: "center", justifyContent: "center", gap: 12, backgroundColor: "#fff" }, problem: { padding: 14, backgroundColor: "#fff7ed", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }, problemText: { flex: 1, color: "#9a3412" }, retry: { color: "#1459D9", fontWeight: "700", marginLeft: 12 },
+  container: { flex: 1, backgroundColor: "#fff" }, header: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: 16, borderBottomWidth: 1, borderBottomColor: "#e5e7eb" }, headerAction: { minWidth: 44, minHeight: 44, alignItems: "flex-end", justifyContent: "center" }, titleRow: { flexDirection: "row", alignItems: "center", gap: 8 }, merchant: { fontWeight: "700", fontSize: 16, color: "#111827" }, testMode: { borderRadius: 999, backgroundColor: "#FEF3C7", paddingHorizontal: 7, paddingVertical: 3 }, testModeText: { color: "#92400E", fontSize: 10, fontWeight: "800", letterSpacing: 0.5 }, amount: { color: "#6b7280", marginTop: 3 }, closeIcon: { color: "#111827", fontSize: 28, lineHeight: 30, fontWeight: "400" }, body: { flex: 1 }, webview: { flex: 1 }, loading: { position: "absolute", top: 0, right: 0, bottom: 0, left: 0, zIndex: 2, alignItems: "center", justifyContent: "center", gap: 12, backgroundColor: "#fff" }, problemOverlay: { position: "absolute", top: 0, right: 0, bottom: 0, left: 0, zIndex: 3, backgroundColor: "#fff", alignItems: "center", justifyContent: "center", paddingHorizontal: 28, gap: 12 }, problemTitle: { fontSize: 18, fontWeight: "700", color: "#111827", textAlign: "center" }, problemText: { color: "#4b5563", textAlign: "center", lineHeight: 20 }, problemPrimary: { marginTop: 6, minHeight: 48, minWidth: 220, paddingHorizontal: 18, borderRadius: 12, backgroundColor: "#1459D9", alignItems: "center", justifyContent: "center" }, problemPrimaryText: { color: "#fff", fontWeight: "700", fontSize: 15 }, problemHint: { color: "#6b7280", fontSize: 12.5, textAlign: "center", lineHeight: 18, marginTop: 4 }, problemSecondary: { minHeight: 44, paddingHorizontal: 12, alignItems: "center", justifyContent: "center" }, problemSecondaryText: { color: "#1459D9", fontWeight: "700" },
 });
