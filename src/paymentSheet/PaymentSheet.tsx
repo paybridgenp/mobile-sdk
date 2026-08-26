@@ -92,7 +92,7 @@ export function PaymentSheet({ visible, session, publishableKey, config, returnU
   // "still active" state can name it. Declared up here with the other hooks: an
   // early return sits between here and the render, and a hook below it changed
   // the hook count between renders ("Rendered more hooks than during the
-  // previous render", owner's phone, 2026-08-21).
+  // previous render") on a real device.
   const lastProviderRef = useRef<string | null>(null);
   const [confirmation, setConfirmation] = useState<{ sessionId: string; method: string } | null>(null);
   const [busy, setBusy] = useState<string | null>(null);

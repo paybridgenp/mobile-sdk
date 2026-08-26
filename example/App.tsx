@@ -173,7 +173,7 @@ function Shop() {
     onCancel: () => {
       void AsyncStorage.removeItem(ACTIVE_KEY);
       nextAttempt();
-      setBanner("Sheet closed. Nothing was charged.");
+      setBanner("Sheet closed. If you already approved the payment it may still complete, and we will keep checking.");
     },
     onError: (error) => {
       // The SDK reports the raw cause (a fetch says "Network request failed");

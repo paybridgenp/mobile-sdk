@@ -2,10 +2,10 @@
 // merchant who installs the published package gets "Unable to resolve module"
 // the first time the sheet renders.
 //
-// This exists because react-native-sse shipped imported-but-undeclared
-// (caught 2026-08-16). Typecheck and unit tests both passed, because the
-// module resolves fine inside this monorepo's node_modules — the failure only
-// appears once the package is installed on its own.
+// This exists because a dependency once shipped imported-but-undeclared.
+// Typecheck and unit tests both passed, because the module resolves fine in a
+// development checkout. The failure only appears once the package is installed
+// on its own.
 
 import { describe, expect, test } from "bun:test";
 import { readdirSync, readFileSync, statSync } from "node:fs";

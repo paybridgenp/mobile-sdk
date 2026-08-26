@@ -82,8 +82,8 @@ export function ExternalPaymentScreen({ action, merchantName, amount, mode, expi
 
   // One deadline per open (and per explicit retry), armed once. It used to be
   // re-armed on EVERY onLoadStart, and a provider that answers with slow
-  // redirects kept pushing it out: the owner's simulator recording shows
-  // 70s+ of "Opening secure payment..." with eSewa's sandbox down.
+  // redirects kept pushing it out: a simulator run showed 70s+ of
+  // "Opening secure payment..." while a provider sandbox was down.
   const DEADLINE_MS = 30_000;
   function armDeadline() {
     if (loadTimeout.current) clearTimeout(loadTimeout.current);

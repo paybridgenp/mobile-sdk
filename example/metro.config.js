@@ -1,7 +1,7 @@
 // The demo depends on the SDK one directory up (`"@paybridge-np/mobile-sdk": "file:.."`),
 // so Metro has to watch that folder and must resolve React / React Native from
-// THIS app only. Resolving them from the SDK's own node_modules (or a monorepo
-// root above it) would load two copies of React and break hooks.
+// THIS app only. Resolving them from the SDK's own node_modules (or any parent
+// workspace root) would load two copies of React and break hooks.
 const { getDefaultConfig } = require("expo/metro-config");
 const path = require("node:path");
 
